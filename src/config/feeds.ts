@@ -2742,7 +2742,7 @@ export const SOURCE_REGION_MAP: Record<
   asia: { labelKey: "header.sourceRegionAsiaPacific", feedKeys: ["asia"] },
   topical: {
     labelKey: "header.sourceRegionTopical",
-    feedKeys: ["energy", "tech", "ai", "finance", "layoffs", "thinktanks"],
+    feedKeys: ["energy", "tech", "ai", "finance", "layoffs", "thinktanks", "social"],
   },
   intel: { labelKey: "header.sourceRegionIntel", feedKeys: [] },
 
@@ -3150,6 +3150,13 @@ export const DEFAULT_ENABLED_SOURCES: Record<string, string[]> = {
     "Treasury",
     "DOJ",
     "CDC",
+    "FEMA",
+  ],
+  social: [
+    "X: OSINTdefender",
+    "Threads: NYT",
+    "Instagram: BBC News",
+    "TikTok: Washington Post",
   ],
   layoffs: ["Layoffs.fyi", "TechCrunch Layoffs", "Layoffs News"],
   thinktanks: [
