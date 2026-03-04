@@ -15990,42 +15990,60 @@ body.has-breaking-alert .panels-grid {
   color: var(--text-dim, #888);
 }
 
-/* ── Desktop layout: Panels left, Map right ── */
+/* ── Global Top Layout rules (mobile fallback) ── */
+.top-layout-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.side-panel-slot {
+  display: contents;
+}
+
+/* ── Desktop layout: Center Map, Side Panels, Bottom Grid ── */
 @media (min-width: 1024px) {
   .main-content {
-    display: grid;
-    grid-template-columns: minmax(400px, 25%) 1fr;
-    grid-template-rows: 1fr;
-    gap: 0;
-    overflow: hidden;
-    /* Add subtle background gradients to make it look premium */
-    background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.05), transparent 50%),
-                radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.03), transparent 50%);
-  }
-
-  .panels-grid {
-    grid-column: 1;
-    grid-row: 1;
-    min-height: 0;
-    /* Overriding default grid behavior to force a 1-column scrollable flex list */
     display: flex;
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    border-right: 1px solid var(--border);
-    box-shadow: 4px 0 24px var(--shadow-color);
-    z-index: 10;
-    padding: 8px; /* Added internal padding so panels don't touch edges */
+    background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.05), transparent 50%),
+                radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.03), transparent 50%);
+  }
+
+  .top-layout-section {
+    display: flex;
+    flex-direction: row;
+    height: 60vh;
+    min-height: 450px;
+    flex-shrink: 0;
+    gap: 8px;
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .side-panel-slot {
+    flex: 0 0 min(25%, 350px);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .side-panel-slot .panel {
+    height: 100% !important;
+    min-height: 0;
+    margin: 0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
   .map-section {
-    grid-column: 2;
-    grid-row: 1;
-    height: auto;
-    min-height: 0;
-    max-height: none;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
     z-index: 5;
-    border: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   }
 
   .map-section.pinned {
@@ -16033,9 +16051,19 @@ body.has-breaking-alert .panels-grid {
   }
 
   .map-resize-handle {
-    display: flex;
-    left: 0;
-    cursor: col-resize;
+    display: none;
+  }
+
+  .panels-grid.bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-auto-rows: minmax(200px, 350px);
+    gap: 12px;
+    padding: 12px;
+    border: none;
+    box-shadow: none;
+    min-height: 0;
+    flex-shrink: 0;
   }
 }
 
