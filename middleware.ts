@@ -13,7 +13,7 @@ const SOCIAL_PREVIEW_UA =
 const SOCIAL_PREVIEW_PATHS = new Set(['/api/story', '/api/og-story']);
 
 // Public endpoints that should never be bot-blocked (version check, etc.)
-const PUBLIC_API_PATHS = new Set(['/api/version']);
+const PUBLIC_API_PATHS = new Set(['/api/version', '/api/rss-proxy', '/api/bootstrap']);
 
 // Slack uses Slack-ImgProxy to fetch OG images — distinct from Slackbot
 const SOCIAL_IMAGE_UA =
@@ -38,7 +38,8 @@ export default function middleware(request: Request) {
   }
 
   // Public endpoints bypass all bot filtering
-  if (PUBLIC_API_PATHS.has(path)) {
+  // Using Array.some for path prefixes like /api/rss-proxy
+  if (Array.from(PUBLIC_API_PATHS).some(p => path.startsWith(p))) {
     return;
   }
 
