@@ -6,56 +6,56 @@
    ============================================================ */
 :root {
   /* Backgrounds */
-  --bg: #0a0a0a;
-  --bg-secondary: #111;
-  --surface: #141414;
-  --surface-hover: #1e1e1e;
-  --surface-active: #1a1a2e;
+  --bg: #0f172a;
+  --bg-secondary: #1e293b;
+  --surface: #0f172a;
+  --surface-hover: #334155;
+  --surface-active: #475569;
 
   /* Borders */
-  --border: #2a2a2a;
-  --border-strong: #444;
-  --border-subtle: #1a1a1a;
+  --border: #334155;
+  --border-strong: #475569;
+  --border-subtle: #1e293b;
 
   /* Text */
-  --text: #e8e8e8;
-  --text-secondary: #ccc;
-  --text-dim: #888;
-  --text-muted: #666;
-  --text-faint: #555;
-  --text-ghost: #444;
-  --accent: #fff;
+  --text: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --text-faint: #475569;
+  --text-ghost: #334155;
+  --accent: #38bdf8;
 
   /* Overlays & shadows */
   --overlay-subtle: rgba(255, 255, 255, 0.03);
   --overlay-light: rgba(255, 255, 255, 0.05);
   --overlay-medium: rgba(255, 255, 255, 0.1);
   --overlay-heavy: rgba(255, 255, 255, 0.2);
-  --shadow-color: rgba(0, 0, 0, 0.5);
+  --shadow-color: rgba(0, 0, 0, 0.6);
   --darken-light: rgba(0, 0, 0, 0.15);
-  --darken-medium: rgba(0, 0, 0, 0.2);
-  --darken-heavy: rgba(0, 0, 0, 0.3);
+  --darken-medium: rgba(0, 0, 0, 0.25);
+  --darken-heavy: rgba(0, 0, 0, 0.4);
 
   /* Scrollbar */
-  --scrollbar-thumb: #333;
-  --scrollbar-thumb-hover: #555;
+  --scrollbar-thumb: #475569;
+  --scrollbar-thumb-hover: #64748b;
 
   /* Input */
-  --input-bg: #1a1a1a;
+  --input-bg: #1e293b;
 
   /* Panels */
-  --panel-bg: #141414;
-  --panel-border: #2a2a2a;
+  --panel-bg: #0f172a;
+  --panel-border: #334155;
 
   /* Map */
-  --map-bg: #020a08;
-  --map-grid: #0a2a20;
-  --map-country: #0a2018;
-  --map-stroke: #0f5040;
+  --map-bg: #020617;
+  --map-grid: #0f172a;
+  --map-country: #1e293b;
+  --map-stroke: #334155;
 
   /* Font stack */
   --font-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Fira Code', 'DejaVu Sans Mono', 'Liberation Mono', monospace;
-  --font-body: var(--font-mono);
+  --font-body: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', sans-serif;
 }
 
 [dir="rtl"] {
@@ -202,8 +202,8 @@ html {
 
 body {
   font-family: var(--font-body);
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.6;
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
@@ -211,6 +211,7 @@ body {
   width: 100%;
   min-height: 100vh;
   min-width: 100vw;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Pause all animations when tab is hidden or idle */

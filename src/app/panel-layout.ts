@@ -196,8 +196,9 @@ export class PanelLayoutManager implements AppModule {
         </div>
       </div>
       <div class="main-content">
+        <div class="panels-grid" id="panelsGrid"></div>
         <div class="map-section" id="mapSection">
-          <div class="panel-header">
+          <div class="panel-header" style="border-radius: 8px 8px 0 0; margin: 6px 6px 0 6px;">
             <div class="panel-header-left">
               <span class="panel-title">${SITE_VARIANT === 'tech' ? t('panels.techMap') : SITE_VARIANT === 'happy' ? 'Good News Map' : t('panels.map')}</span>
             </div>
@@ -213,11 +214,10 @@ export class PanelLayoutManager implements AppModule {
               </button>
             </div>
           </div>
-          <div class="map-container" id="mapContainer"></div>
+          <div class="map-container" id="mapContainer" style="border-radius: 0 0 8px 8px; margin: 0 6px 6px 6px;"></div>
           ${SITE_VARIANT === 'happy' ? '<button class="tv-exit-btn" id="tvExitBtn">Exit TV Mode</button>' : ''}
           <div class="map-resize-handle" id="mapResizeHandle"></div>
         </div>
-        <div class="panels-grid" id="panelsGrid"></div>
       </div>
     `;
 
