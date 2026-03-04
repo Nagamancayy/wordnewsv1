@@ -285,10 +285,6 @@ export const SOURCE_TIERS: Record<string, number> = {
   "AI News": 4,
   "Layoffs News": 4,
   "Reddit r/geopolitics": 4,
-  "X: OSINTdefender": 4,
-  "Threads: NYT": 4,
-  "Instagram: BBC News": 4,
-  "TikTok: Washington Post": 4,
 
   // Tier 2 - Positive News Sources (Happy variant)
   "Good News Network": 2,
@@ -669,12 +665,6 @@ export function getSourcePanelId(sourceName: string): string {
 }
 
 const FULL_FEEDS: Record<string, Feed[]> = {
-  social: [
-    { name: 'X: OSINTdefender', url: rss('https://rsshub.app/twitter/user/sentdefender') },
-    { name: 'Threads: NYT', url: rss('https://rsshub.app/threads/nytimes') },
-    { name: 'Instagram: BBC News', url: rss('https://rsshub.app/instagram/user/bbcnews') },
-    { name: 'TikTok: Washington Post', url: rss('https://rsshub.app/tiktok/user/@washingtonpost') },
-  ],
   politics: [
     {
       name: "BBC World",
@@ -3151,12 +3141,6 @@ export const DEFAULT_ENABLED_SOURCES: Record<string, string[]> = {
     "DOJ",
     "CDC",
     "FEMA",
-  ],
-  social: [
-    "X: OSINTdefender",
-    "Threads: NYT",
-    "Instagram: BBC News",
-    "TikTok: Washington Post",
   ],
   layoffs: ["Layoffs.fyi", "TechCrunch Layoffs", "Layoffs News"],
   thinktanks: [
