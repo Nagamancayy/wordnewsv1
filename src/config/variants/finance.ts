@@ -136,6 +136,12 @@ export const FEEDS: Record<string, Feed[]> = {
     { name: 'Risk & Volatility', url: rss('https://news.google.com/rss/search?q=(VIX+OR+"market+volatility"+OR+"risk+off"+OR+"market+correction")+when:3d&hl=en-US&gl=US&ceid=US:en') },
     { name: 'Bank Research', url: rss('https://news.google.com/rss/search?q=("Goldman+Sachs"+OR+"JPMorgan"+OR+"Morgan+Stanley")+forecast+OR+outlook+when:3d&hl=en-US&gl=US&ceid=US:en') },
   ],
+  social: [
+    { name: 'X: OSINTdefender', url: rss('https://rsshub.app/twitter/user/sentdefender') },
+    { name: 'Threads: NYT', url: rss('https://rsshub.app/threads/nytimes') },
+    { name: 'Instagram: BBC News', url: rss('https://rsshub.app/instagram/user/bbcnews') },
+    { name: 'TikTok: Washington Post', url: rss('https://rsshub.app/tiktok/user/@washingtonpost') },
+  ],
 };
 
 // Panel configuration for finance/trading
@@ -168,6 +174,7 @@ export const DEFAULT_PANELS: Record<string, PanelConfig> = {
   gccNews: { name: 'GCC Business News', enabled: true, priority: 2 },
   polymarket: { name: 'Predictions', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
+  social: { name: 'Social Media', enabled: true, priority: 2 },
 };
 
 // Finance-focused map layers

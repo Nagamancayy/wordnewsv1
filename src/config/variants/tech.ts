@@ -169,6 +169,12 @@ export const FEEDS: Record<string, Feed[]> = {
     { name: 'Demo Day News', url: rss('https://news.google.com/rss/search?q=("demo+day"+OR+"YC+batch"+OR+"accelerator+batch")+startup+when:7d&hl=en-US&gl=US&ceid=US:en') },
     { name: 'Startup School', url: rss('https://news.google.com/rss/search?q="Startup+School"+OR+"YC+Startup+School"+when:14d&hl=en-US&gl=US&ceid=US:en') },
   ],
+  social: [
+    { name: 'X: OSINTdefender', url: rss('https://rsshub.app/twitter/user/sentdefender') },
+    { name: 'Threads: NYT', url: rss('https://rsshub.app/threads/nytimes') },
+    { name: 'Instagram: BBC News', url: rss('https://rsshub.app/instagram/user/bbcnews') },
+    { name: 'TikTok: Washington Post', url: rss('https://rsshub.app/tiktok/user/@washingtonpost') },
+  ],
 };
 
 // Panel configuration for tech/AI analysis
@@ -197,6 +203,7 @@ export const DEFAULT_PANELS: Record<string, PanelConfig> = {
   'etf-flows': { name: 'BTC ETF Tracker', enabled: true, priority: 2 },
   stablecoins: { name: 'Stablecoins', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
+  social: { name: 'Social Media', enabled: true, priority: 2 },
 };
 
 // Tech-focused map layers (subset)
