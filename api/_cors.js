@@ -1,8 +1,8 @@
 const ALLOWED_ORIGIN_PATTERNS = [
-  /^https:\/\/(.*\.)?worldmonitor\.app$/,
-  /^https:\/\/worldmonitor-[a-z0-9-]+-elie-[a-z0-9]+\.vercel\.app$/,
-  /^https:\/\/(.*\.)?vercel\.app$/,
-  /^https?:\/\/localhost(:\d+)?$/,
+  /^https:\/\/(.*\.)?worldmonitor\.app\/?$/,
+  /^https:\/\/worldmonitor-[a-z0-9-]+-elie-[a-z0-9]+\.vercel\.app\/?$/,
+  /^https:\/\/(.*\.)?vercel\.app\/?$/,
+  /^https?:\/\/localhost(:\d+)?\/?$/,
   /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
   /^https?:\/\/tauri\.localhost(:\d+)?$/,
   /^https?:\/\/[a-z0-9-]+\.tauri\.localhost(:\d+)?$/i,
@@ -11,6 +11,7 @@ const ALLOWED_ORIGIN_PATTERNS = [
 ];
 
 function isAllowedOrigin(origin) {
+  if (!origin) return true; // Allow no-origin temporarily for debugging
   return Boolean(origin) && ALLOWED_ORIGIN_PATTERNS.some((pattern) => pattern.test(origin));
 }
 
