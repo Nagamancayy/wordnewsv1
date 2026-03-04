@@ -166,8 +166,11 @@ const router = createRouter(allRoutes);
 
 export default async function handler(originalRequest: Request): Promise<Response> {
   let request = originalRequest;
+  const origin = request.headers.get('origin') || '';
+  const isCustomVercel = /^https:\/\/(.*\.)?vercel\.app\/?$/.test(origin);
+
   // Origin check first — skip CORS headers for disallowed origins (M-2 fix)
-  if (isDisallowedOrigin(request)) {
+  if (!isCustomVercel && isDisallowedOrigin(request)) {
     return new Response(JSON.stringify({ error: 'Origin not allowed' }), {
       status: 403,
       headers: { 'Content-Type': 'application/json' },
