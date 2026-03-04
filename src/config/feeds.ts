@@ -2732,7 +2732,7 @@ export const SOURCE_REGION_MAP: Record<
   asia: { labelKey: "header.sourceRegionAsiaPacific", feedKeys: ["asia"] },
   topical: {
     labelKey: "header.sourceRegionTopical",
-    feedKeys: ["energy", "tech", "ai", "finance", "layoffs", "thinktanks", "social"],
+    feedKeys: ["energy", "tech", "ai", "finance", "layoffs", "thinktanks"],
   },
   intel: { labelKey: "header.sourceRegionIntel", feedKeys: [] },
 
