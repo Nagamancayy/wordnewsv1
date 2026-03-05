@@ -56,8 +56,6 @@ const FULL_PANELS: Record<string, PanelConfig> = {
   'telegram-intel': { name: 'Telegram Intel', enabled: true, priority: 2 },
   'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
-  socmed: { name: 'Social Media', enabled: true, priority: 2 },
-  indonesia: { name: 'Indonesia News', enabled: true, priority: 2 },
 };
 
 const FULL_MAP_LAYERS: MapLayers = {
@@ -204,8 +202,6 @@ const TECH_PANELS: Record<string, PanelConfig> = {
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
   'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
-  socmed: { name: 'Social Media', enabled: true, priority: 2 },
-  indonesia: { name: 'Indonesia News', enabled: true, priority: 2 },
 };
 
 const TECH_MAP_LAYERS: MapLayers = {
@@ -350,8 +346,6 @@ const FINANCE_PANELS: Record<string, PanelConfig> = {
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
   'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
-  socmed: { name: 'Social Media', enabled: true, priority: 2 },
-  indonesia: { name: 'Indonesia News', enabled: true, priority: 2 },
 };
 
 const FINANCE_MAP_LAYERS: MapLayers = {

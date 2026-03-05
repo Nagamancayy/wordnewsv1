@@ -533,16 +533,6 @@ export class PanelLayoutManager implements AppModule {
     this.ctx.newsPanels['energy'] = energyPanel;
     this.ctx.panels['energy'] = energyPanel;
 
-    const socmedPanel = new NewsPanel('socmed', 'Social Media');
-    this.attachRelatedAssetHandlers(socmedPanel);
-    this.ctx.newsPanels['socmed'] = socmedPanel;
-    this.ctx.panels['socmed'] = socmedPanel;
-
-    const indonesiaPanel = new NewsPanel('indonesia', 'Indonesia News');
-    this.attachRelatedAssetHandlers(indonesiaPanel);
-    this.ctx.newsPanels['indonesia'] = indonesiaPanel;
-    this.ctx.panels['indonesia'] = indonesiaPanel;
-
     for (const key of Object.keys(FEEDS)) {
       if (this.ctx.newsPanels[key]) continue;
       if (!Array.isArray((FEEDS as Record<string, unknown>)[key])) continue;
