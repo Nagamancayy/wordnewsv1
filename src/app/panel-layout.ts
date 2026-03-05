@@ -202,8 +202,6 @@ export class PanelLayoutManager implements AppModule {
       </div>
       <div class="main-content">
         <div class="top-layout-section">
-          <div class="side-panel-slot left-slot" id="leftPanelSlot"></div>
-          
           <div class="map-section" id="mapSection">
             <div class="panel-header" style="border-radius: 8px 8px 0 0; margin: 6px 6px 0 6px;">
               <div class="panel-header-left">
@@ -745,7 +743,6 @@ export class PanelLayoutManager implements AppModule {
       }
     }
 
-    const leftSlot = document.getElementById('leftPanelSlot');
     const rightSlot = document.getElementById('rightPanelSlot');
     let slotsFilled = 0;
 
@@ -755,10 +752,7 @@ export class PanelLayoutManager implements AppModule {
         const el = panel.getElement();
         this.makeDraggable(el, key);
 
-        if (slotsFilled === 0 && leftSlot) {
-          leftSlot.appendChild(el);
-          slotsFilled++;
-        } else if (slotsFilled === 1 && rightSlot) {
+        if (slotsFilled === 0 && rightSlot) {
           rightSlot.appendChild(el);
           slotsFilled++;
         } else {

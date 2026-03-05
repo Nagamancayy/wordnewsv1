@@ -16023,7 +16023,7 @@ body.has-breaking-alert .panels-grid {
   }
 
   .side-panel-slot {
-    flex: 0 0 min(25%, 350px);
+    flex: 0 0 calc(50% - 4px);
     display: flex;
     flex-direction: column;
   }
@@ -16036,7 +16036,7 @@ body.has-breaking-alert .panels-grid {
   }
 
   .map-section {
-    flex: 1;
+    flex: 0 0 calc(50% - 4px);
     min-width: 0;
     height: 100%;
     margin: 0;
