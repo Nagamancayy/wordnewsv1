@@ -389,5 +389,18 @@ export async function fetchIranEvents(): Promise<IranEvent[]> {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     return r.json() as Promise<ListIranEventsResponse>;
   }, emptyIranFallback);
-  return resp.events;
+
+  // If the API returned data, use it
+  if (resp.events.length > 0) return resp.events;
+
+  // Fallback: load from static pre-processed data file
+  try {
+    const fallback = await globalThis.fetch('/data/iran-events-processed.json');
+    if (!fallback.ok) return [];
+    const raw: unknown[] = await fallback.json();
+    // Map raw JSON objects to IranEvent shape (fields match exactly)
+    return raw as IranEvent[];
+  } catch {
+    return [];
+  }
 }
