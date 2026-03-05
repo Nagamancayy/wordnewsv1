@@ -2438,9 +2438,123 @@ const TECH_FEEDS: Record<string, Feed[]> = {
       url: rss("https://rss.art19.com/masters-of-scale"),
     },
   ],
+  socmed: [
+    {
+      name: "X: OSINTdefender",
+      url: rss(
+        'https://news.google.com/rss/search?q="OSINTdefender"+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: BNO News",
+      url: rss(
+        'https://news.google.com/rss/search?q="BNO+News"+breaking+when:1d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: Intel Crab",
+      url: rss(
+        'https://news.google.com/rss/search?q="Intel+Crab"+OR+"intelcrab"+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: War Monitor",
+      url: rss(
+        'https://news.google.com/rss/search?q="War+Monitor"+conflict+breaking+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Threads: NYT",
+      url: rss(
+        'https://news.google.com/rss/search?q="New+York+Times"+Threads+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Instagram: BBC News",
+      url: rss(
+        'https://news.google.com/rss/search?q="BBC+News"+Instagram+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "TikTok: Washington Post",
+      url: rss(
+        'https://news.google.com/rss/search?q="Washington+Post"+TikTok+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Reddit r/worldnews",
+      url: rss("https://www.reddit.com/r/worldnews/.rss"),
+    },
+    {
+      name: "Reddit r/geopolitics",
+      url: rss("https://www.reddit.com/r/geopolitics/.rss"),
+    },
+  ],
+  indonesia: [
+    {
+      name: "Kompas",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:kompas.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Detik",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:detik.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Tribunnews",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:tribunnews.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "CNBC Indonesia",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:cnbcindonesia.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Tempo",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:tempo.co+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Liputan6",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:liputan6.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "CNN Indonesia",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:cnnindonesia.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Antara News",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:antaranews.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Jakarta Post",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:thejakartapost.com+when:2d&hl=en-US&gl=US&ceid=US:en",
+      ),
+    },
+  ],
 };
-
-// Finance/Trading variant feeds (all free RSS / Google News proxies)
 const FINANCE_FEEDS: Record<string, Feed[]> = {
   markets: [
     {
@@ -2778,6 +2892,122 @@ const FINANCE_FEEDS: Record<string, Feed[]> = {
       name: "Vision 2030",
       url: rss(
         'https://news.google.com/rss/search?q="Vision+2030"+(project+OR+investment+OR+announced)+when:14d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+  ],
+  socmed: [
+    {
+      name: "X: OSINTdefender",
+      url: rss(
+        'https://news.google.com/rss/search?q="OSINTdefender"+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: BNO News",
+      url: rss(
+        'https://news.google.com/rss/search?q="BNO+News"+breaking+when:1d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: Intel Crab",
+      url: rss(
+        'https://news.google.com/rss/search?q="Intel+Crab"+OR+"intelcrab"+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: War Monitor",
+      url: rss(
+        'https://news.google.com/rss/search?q="War+Monitor"+conflict+breaking+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Threads: NYT",
+      url: rss(
+        'https://news.google.com/rss/search?q="New+York+Times"+Threads+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Instagram: BBC News",
+      url: rss(
+        'https://news.google.com/rss/search?q="BBC+News"+Instagram+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "TikTok: Washington Post",
+      url: rss(
+        'https://news.google.com/rss/search?q="Washington+Post"+TikTok+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Reddit r/worldnews",
+      url: rss("https://www.reddit.com/r/worldnews/.rss"),
+    },
+    {
+      name: "Reddit r/geopolitics",
+      url: rss("https://www.reddit.com/r/geopolitics/.rss"),
+    },
+  ],
+  indonesia: [
+    {
+      name: "Kompas",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:kompas.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Detik",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:detik.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Tribunnews",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:tribunnews.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "CNBC Indonesia",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:cnbcindonesia.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Tempo",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:tempo.co+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Liputan6",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:liputan6.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "CNN Indonesia",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:cnnindonesia.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Antara News",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:antaranews.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Jakarta Post",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:thejakartapost.com+when:2d&hl=en-US&gl=US&ceid=US:en",
       ),
     },
   ],
