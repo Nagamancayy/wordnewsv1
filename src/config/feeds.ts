@@ -295,6 +295,23 @@ export const SOURCE_TIERS: Record<string, number> = {
   "GNN Animals": 3,
   "GNN Health": 3,
   "GNN Heroes": 3,
+
+  // Social Media OSINT
+  "X: BNO News": 2,
+  "X: Intel Crab": 3,
+  "X: War Monitor": 3,
+  "Reddit r/worldnews": 4,
+
+  // Indonesian Media
+  Kompas: 2,
+  Detik: 2,
+  Tribunnews: 3,
+  "CNBC Indonesia": 2,
+  Tempo: 2,
+  Liputan6: 3,
+  "CNN Indonesia": 2,
+  "Antara News": 1,
+  "Jakarta Post": 2,
 };
 
 export function getSourceTier(sourceName: string): number {
@@ -419,9 +436,24 @@ export const SOURCE_TYPES: Record<string, SourceType> = {
   "Layoffs News": "tech",
   "Reddit r/geopolitics": "other",
   "X: OSINTdefender": "other",
+  "X: BNO News": "other",
+  "X: Intel Crab": "other",
+  "X: War Monitor": "other",
   "Threads: NYT": "mainstream",
   "Instagram: BBC News": "mainstream",
   "TikTok: Washington Post": "mainstream",
+  "Reddit r/worldnews": "other",
+
+  // Indonesian Media
+  Kompas: "mainstream",
+  Detik: "mainstream",
+  Tribunnews: "mainstream",
+  "CNBC Indonesia": "market",
+  Tempo: "mainstream",
+  Liputan6: "mainstream",
+  "CNN Indonesia": "mainstream",
+  "Antara News": "wire",
+  "Jakarta Post": "mainstream",
 
   // Regional Tech Startups
   "EU Startups": "tech",
@@ -1502,6 +1534,122 @@ const FULL_FEEDS: Record<string, Feed[]> = {
       name: "Mining & Resources",
       url: rss(
         'https://news.google.com/rss/search?q=(lithium+OR+"rare+earth"+OR+cobalt+OR+mining)+when:3d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+  ],
+  socmed: [
+    {
+      name: "X: OSINTdefender",
+      url: rss(
+        'https://news.google.com/rss/search?q="OSINTdefender"+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: BNO News",
+      url: rss(
+        'https://news.google.com/rss/search?q="BNO+News"+breaking+when:1d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: Intel Crab",
+      url: rss(
+        'https://news.google.com/rss/search?q="Intel+Crab"+OR+"intelcrab"+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "X: War Monitor",
+      url: rss(
+        'https://news.google.com/rss/search?q="War+Monitor"+conflict+breaking+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Threads: NYT",
+      url: rss(
+        'https://news.google.com/rss/search?q="New+York+Times"+Threads+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Instagram: BBC News",
+      url: rss(
+        'https://news.google.com/rss/search?q="BBC+News"+Instagram+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "TikTok: Washington Post",
+      url: rss(
+        'https://news.google.com/rss/search?q="Washington+Post"+TikTok+when:2d&hl=en-US&gl=US&ceid=US:en',
+      ),
+    },
+    {
+      name: "Reddit r/worldnews",
+      url: rss("https://www.reddit.com/r/worldnews/.rss"),
+    },
+    {
+      name: "Reddit r/geopolitics",
+      url: rss("https://www.reddit.com/r/geopolitics/.rss"),
+    },
+  ],
+  indonesia: [
+    {
+      name: "Kompas",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:kompas.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Detik",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:detik.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Tribunnews",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:tribunnews.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "CNBC Indonesia",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:cnbcindonesia.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Tempo",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:tempo.co+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Liputan6",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:liputan6.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "CNN Indonesia",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:cnnindonesia.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Antara News",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:antaranews.com+when:1d&hl=id&gl=ID&ceid=ID:id",
+      ),
+      lang: "id",
+    },
+    {
+      name: "Jakarta Post",
+      url: rss(
+        "https://news.google.com/rss/search?q=site:thejakartapost.com+when:2d&hl=en-US&gl=US&ceid=US:en",
       ),
     },
   ],
@@ -3159,6 +3307,23 @@ export const DEFAULT_ENABLED_SOURCES: Record<string, string[]> = {
     "Nuclear Energy",
     "Reuters Energy",
     "Mining & Resources",
+  ],
+  socmed: [
+    "X: OSINTdefender",
+    "X: BNO News",
+    "X: Intel Crab",
+    "Threads: NYT",
+    "Reddit r/worldnews",
+    "Reddit r/geopolitics",
+  ],
+  indonesia: [
+    "Kompas",
+    "Detik",
+    "CNBC Indonesia",
+    "Tempo",
+    "CNN Indonesia",
+    "Antara News",
+    "Jakarta Post",
   ],
 };
 
