@@ -5,7 +5,8 @@
  */
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import type { Layer, LayersList, PickingInfo } from '@deck.gl/core';
-import { GeoJsonLayer, ScatterplotLayer, PathLayer, IconLayer, TextLayer, PolygonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, ScatterplotLayer, PathLayer, IconLayer, TextLayer, PolygonLayer, ArcLayer } from '@deck.gl/layers';
+import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import maplibregl from 'maplibre-gl';
 import Supercluster from 'supercluster';
 import type {
@@ -36,14 +37,12 @@ import type {
   MilitaryBaseEnriched,
 } from '@/types';
 import { fetchMilitaryBases, type MilitaryBaseCluster as ServerBaseCluster } from '@/services/military-bases';
-import type { AirportDelayAlert } from '@/services/aviation';
+import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { IranEvent } from '@/services/conflict';
 import type { GpsJamHex } from '@/services/gps-interference';
 import type { DisplacementFlow } from '@/services/displacement';
 import type { Earthquake } from '@/services/earthquakes';
 import type { ClimateAnomaly } from '@/services/climate';
-import { ArcLayer } from '@deck.gl/layers';
-import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 import type { WeatherAlert } from '@/services/weather';
 import { escapeHtml } from '@/utils/sanitize';
 import { tokenizeForMatch, matchKeyword, matchesAnyKeyword, findMatchingKeywords } from '@/utils/keyword-match';
@@ -159,15 +158,15 @@ const LIGHT_STYLE = SITE_VARIANT === 'happy'
 // Zoom thresholds for layer visibility and labels (matches old Map.ts)
 // Zoom-dependent layer visibility and labels
 const LAYER_ZOOM_THRESHOLDS: Partial<Record<keyof MapLayers, { minZoom: number; showLabels?: number }>> = {
-  bases: { minZoom: 3, showLabels: 5 },
-  nuclear: { minZoom: 3 },
-  conflicts: { minZoom: 1, showLabels: 3 },
-  economic: { minZoom: 3 },
-  natural: { minZoom: 1, showLabels: 2 },
-  datacenters: { minZoom: 5 },
-  irradiators: { minZoom: 4 },
-  spaceports: { minZoom: 3 },
-  gulfInvestments: { minZoom: 2, showLabels: 5 },
+  bases: { minZoom: 0, showLabels: 5 },
+  nuclear: { minZoom: 0 },
+  conflicts: { minZoom: 0, showLabels: 3 },
+  economic: { minZoom: 0 },
+  natural: { minZoom: 0, showLabels: 2 },
+  datacenters: { minZoom: 0 },
+  irradiators: { minZoom: 0 },
+  spaceports: { minZoom: 0 },
+  gulfInvestments: { minZoom: 0, showLabels: 5 },
 };
 // Export for external use
 export { LAYER_ZOOM_THRESHOLDS };
@@ -297,6 +296,8 @@ export class DeckGLMap {
   private firmsFireData: Array<{ lat: number; lon: number; brightness: number; frp: number; confidence: number; region: string; acq_date: string; daynight: string }> = [];
   private techEvents: TechEventMarker[] = [];
   private flightDelays: AirportDelayAlert[] = [];
+  private aircraftPositions: PositionSample[] = [];
+  private aircraftFetchTimer: ReturnType<typeof setInterval> | null = null;
   private news: NewsItem[] = [];
   private newsLocations: Array<{ lat: number; lon: number; title: string; threatLevel: string; timestamp?: Date }> = [];
   private newsLocationFirstSeen = new Map<string, number>();
@@ -312,6 +313,17 @@ export class DeckGLMap {
   private happinessScores: Map<string, number> = new Map();
   private happinessYear = 0;
   private happinessSource = '';
+
+  private ciiScoresMap: Map<string, { score: number; level: string }> = new Map();
+  private ciiScoresVersion = 0;
+
+  private static readonly CII_LEVEL_COLORS: Record<string, [number, number, number, number]> = {
+    critical: [220, 38, 38, 140],
+    high: [232, 116, 37, 120],
+    elevated: [220, 192, 48, 100],
+    monitoring: [40, 179, 62, 80],
+  };
+
   private speciesRecoveryZones: Array<SpeciesRecovery & { recoveryZone: { name: string; lat: number; lon: number } }> = [];
   private renewableInstallations: RenewableInstallation[] = [];
   private countriesGeoJsonData: FeatureCollection<Geometry> | null = null;
@@ -327,6 +339,7 @@ export class DeckGLMap {
   private onCountryClick?: (country: CountryClickPayload) => void;
   private onLayerChange?: (layer: keyof MapLayers, enabled: boolean, source: 'user' | 'programmatic') => void;
   private onStateChange?: (state: DeckMapState) => void;
+  private onAircraftPositionsUpdate?: (positions: PositionSample[]) => void;
 
   // Highlighted assets
   private highlightedAssets: Record<AssetType, Set<string>> = {
@@ -367,6 +380,10 @@ export class DeckGLMap {
   private lastPipelineHighlightSignature = '';
   private debouncedRebuildLayers: () => void;
   private debouncedFetchBases: () => void;
+  private debouncedFetchAircraft: (() => void) & { cancel(): void };
+  private lastAircraftFetchCenter: [number, number] | null = null;
+  private lastAircraftFetchZoom = -1;
+  private aircraftFetchSeq = 0;
   private rafUpdateLayers: () => void;
   private moveTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -381,6 +398,7 @@ export class DeckGLMap {
       try { this.deckOverlay?.setProps({ layers: this.buildLayers() }); } catch { /* map mid-teardown */ }
     }, 150);
     this.debouncedFetchBases = debounce(() => this.fetchServerBases(), 300);
+    this.debouncedFetchAircraft = debounce(() => this.fetchViewportAircraft(), 500);
     this.rafUpdateLayers = rafSchedule(() => {
       if (this.renderPaused || this.webglLost || !this.maplibreMap) return;
       try { this.deckOverlay?.setProps({ layers: this.buildLayers() }); } catch { /* map mid-teardown */ }
@@ -520,6 +538,7 @@ export class DeckGLMap {
       this.lastSCZoom = -1;
       this.rafUpdateLayers();
       this.debouncedFetchBases();
+      this.debouncedFetchAircraft();
       this.state.zoom = this.maplibreMap?.getZoom() ?? this.state.zoom;
       this.onStateChange?.(this.state);
     });
@@ -987,9 +1006,6 @@ export class DeckGLMap {
     }
   }
 
-
-
-
   private isLayerVisible(layerKey: keyof MapLayers): boolean {
     const threshold = LAYER_ZOOM_THRESHOLDS[layerKey];
     if (!threshold) return true;
@@ -1078,6 +1094,17 @@ export class DeckGLMap {
     // Hotspots layer (all hotspots including high/breaking, with pulse + ghost)
     if (mapLayers.hotspots) {
       layers.push(...this.createHotspotsLayers());
+    }
+
+    // Economic Centers layer
+    if (mapLayers.economic && this.isLayerVisible('economic')) {
+      layers.push(this.createEconomicCentersLayer());
+    }
+
+    // CII choropleth (country instability heat-map)
+    if (mapLayers.ciiChoropleth) {
+      const ciiLayer = this.createCIIChoroplethLayer();
+      if (ciiLayer) layers.push(ciiLayer);
     }
 
     // Datacenters layer - SQUARE icons at zoom >= 5, cluster dots at zoom < 5
@@ -1218,8 +1245,8 @@ export class DeckGLMap {
       layers.push(this.createMineralsLayer());
     }
 
-    // APT Groups layer (geopolitical variant only - always shown, no toggle)
-    if (SITE_VARIANT !== 'tech' && SITE_VARIANT !== 'happy') {
+    // APT Groups layer (geopolitical variant only)
+    if ((SITE_VARIANT !== 'tech' && SITE_VARIANT !== 'happy') && mapLayers.cyberThreats) {
       layers.push(this.createAPTGroupsLayer());
     }
 
@@ -2657,6 +2684,28 @@ export class DeckGLMap {
     });
   }
 
+  private createCIIChoroplethLayer(): GeoJsonLayer | null {
+    if (!this.countriesGeoJsonData || this.ciiScoresMap.size === 0) return null;
+    const scores = this.ciiScoresMap;
+    const colors = DeckGLMap.CII_LEVEL_COLORS;
+    return new GeoJsonLayer({
+      id: 'cii-choropleth-layer',
+      data: this.countriesGeoJsonData,
+      filled: true,
+      stroked: true,
+      getFillColor: (feature: { properties?: Record<string, unknown> }) => {
+        const code = feature.properties?.['ISO3166-1-Alpha-2'] as string | undefined;
+        const entry = code ? scores.get(code) : undefined;
+        return entry ? (colors[entry.level] ?? [0, 0, 0, 0]) : [0, 0, 0, 0];
+      },
+      getLineColor: [80, 80, 80, 80] as [number, number, number, number],
+      getLineWidth: 1,
+      lineWidthMinPixels: 0.5,
+      pickable: true,
+      updateTriggers: { getFillColor: [this.ciiScoresVersion] },
+    });
+  }
+
   private createSpeciesRecoveryLayer(): ScatterplotLayer {
     return new ScatterplotLayer({
       id: 'species-recovery-layer',
@@ -3229,6 +3278,7 @@ export class DeckGLMap {
         { key: 'techEvents', label: t('components.deckgl.layers.techEvents'), icon: '&#128197;' },
         { key: 'natural', label: t('components.deckgl.layers.naturalEvents'), icon: '&#127755;' },
         { key: 'fires', label: t('components.deckgl.layers.fires'), icon: '&#128293;' },
+        { key: 'ciiChoropleth', label: t('components.deckgl.layers.ciiChoropleth'), icon: '&#127758;' },
         { key: 'dayNight', label: t('components.deckgl.layers.dayNight'), icon: '&#127763;' },
       ]
       : SITE_VARIANT === 'finance'
@@ -3247,6 +3297,7 @@ export class DeckGLMap {
           { key: 'waterways', label: t('components.deckgl.layers.strategicWaterways'), icon: '&#9875;' },
           { key: 'natural', label: t('components.deckgl.layers.naturalEvents'), icon: '&#127755;' },
           { key: 'cyberThreats', label: t('components.deckgl.layers.cyberThreats'), icon: '&#128737;' },
+          { key: 'ciiChoropleth', label: t('components.deckgl.layers.ciiChoropleth'), icon: '&#127758;' },
           { key: 'dayNight', label: t('components.deckgl.layers.dayNight'), icon: '&#127763;' },
         ]
       : SITE_VARIANT === 'happy'
@@ -3256,6 +3307,7 @@ export class DeckGLMap {
           { key: 'happiness', label: 'World Happiness', icon: '&#128522;' },
           { key: 'speciesRecovery', label: 'Species Recovery', icon: '&#128062;' },
           { key: 'renewableInstallations', label: 'Clean Energy', icon: '&#9889;' },
+          { key: 'ciiChoropleth', label: t('components.deckgl.layers.ciiChoropleth'), icon: '&#127758;' },
         ]
       : [
         { key: 'iranAttacks', label: t('components.deckgl.layers.iranAttacks'), icon: '&#127919;' },
@@ -3285,6 +3337,7 @@ export class DeckGLMap {
         { key: 'economic', label: t('components.deckgl.layers.economicCenters'), icon: '&#128176;' },
         { key: 'minerals', label: t('components.deckgl.layers.criticalMinerals'), icon: '&#128142;' },
         { key: 'gpsJamming', label: t('components.deckgl.layers.gpsJamming'), icon: '&#128225;' },
+        { key: 'ciiChoropleth', label: t('components.deckgl.layers.ciiChoropleth'), icon: '&#127758;' },
         { key: 'dayNight', label: t('components.deckgl.layers.dayNight'), icon: '&#127763;' },
       ];
 
@@ -3670,7 +3723,16 @@ export class DeckGLMap {
   }
 
   public setLayers(layers: MapLayers): void {
-    this.state.layers = layers;
+    const flightsEnabled = !this.state.layers.flights && layers.flights;
+    const flightsDisabled = this.state.layers.flights && !layers.flights;
+    this.state.layers = { ...layers };
+    
+    if (flightsEnabled) {
+      this.manageAircraftTimer(true);
+    } else if (flightsDisabled) {
+      this.manageAircraftTimer(false);
+    }
+
     this.render(); // Debounced
 
     // Update toggle checkboxes
@@ -3940,6 +4002,77 @@ export class DeckGLMap {
     this.syncPulseAnimation();
   }
 
+  public setAircraftPositions(positions: PositionSample[]): void {
+    this.aircraftPositions = positions;
+    if (this.onAircraftPositionsUpdate) {
+      this.onAircraftPositionsUpdate(positions);
+    }
+    this.render();
+  }
+
+  private manageAircraftTimer(enabled: boolean): void {
+    if (enabled) {
+      if (!this.aircraftFetchTimer) {
+        this.aircraftFetchTimer = setInterval(() => {
+          this.lastAircraftFetchCenter = null; // force refresh on poll
+          this.fetchViewportAircraft();
+        }, 120_000); // 120s poll
+        this.debouncedFetchAircraft();
+      }
+    } else {
+      if (this.aircraftFetchTimer) {
+        clearInterval(this.aircraftFetchTimer);
+        this.aircraftFetchTimer = null;
+      }
+      this.aircraftPositions = [];
+    }
+  }
+
+  private hasAircraftViewportChanged(): boolean {
+    if (!this.maplibreMap) return false;
+    if (!this.lastAircraftFetchCenter) return true;
+    const center = this.maplibreMap.getCenter();
+    const zoom = this.maplibreMap.getZoom();
+    if (Math.abs(zoom - this.lastAircraftFetchZoom) >= 1) return true;
+    const [prevLng, prevLat] = this.lastAircraftFetchCenter;
+    const threshold = Math.max(0.1, 2 / Math.pow(2, Math.max(0, zoom - 3)));
+    return Math.abs(center.lat - prevLat) > threshold || Math.abs(center.lng - prevLng) > threshold;
+  }
+
+  private fetchViewportAircraft(): void {
+    if (!this.maplibreMap) return;
+    if (!this.state.layers.flights) return;
+    const zoom = this.maplibreMap.getZoom();
+    if (zoom < 2) {
+      if (this.aircraftPositions.length > 0) {
+        this.aircraftPositions = [];
+        this.render();
+      }
+      return;
+    }
+    if (!this.hasAircraftViewportChanged()) return;
+    const bounds = this.maplibreMap.getBounds();
+    const sw = bounds.getSouthWest();
+    const ne = bounds.getNorthEast();
+    const seq = ++this.aircraftFetchSeq;
+    import('@/services/aviation').then(({ fetchAircraftPositions }) => {
+      fetchAircraftPositions({
+        swLat: sw.lat, swLon: sw.lng,
+        neLat: ne.lat, neLon: ne.lng,
+      }).then((positions) => {
+        if (seq !== this.aircraftFetchSeq) return;
+        this.setAircraftPositions(positions);
+        const center = this.maplibreMap?.getCenter();
+        if (center) {
+          this.lastAircraftFetchCenter = [center.lng, center.lat];
+          this.lastAircraftFetchZoom = this.maplibreMap!.getZoom();
+        }
+      }).catch((err) => {
+        console.error('[aircraft] fetch error', err);
+      });
+    });
+  }
+
   public setFlightDelays(delays: AirportDelayAlert[]): void {
     this.flightDelays = delays;
     this.render();
@@ -4045,6 +4178,12 @@ export class DeckGLMap {
     this.happinessScores = data.scores;
     this.happinessYear = data.year;
     this.happinessSource = data.source;
+    this.render();
+  }
+
+  public setCIIScores(scores: Array<{ code: string; score: number; level: string }>): void {
+    this.ciiScoresMap = new Map(scores.map(s => [s.code, { score: s.score, level: s.level }]));
+    this.ciiScoresVersion++;
     this.render();
   }
 
@@ -4172,6 +4311,10 @@ export class DeckGLMap {
 
   public setOnStateChange(callback: (state: DeckMapState) => void): void {
     this.onStateChange = callback;
+  }
+
+  public setOnAircraftPositionsUpdate(callback: (positions: PositionSample[]) => void): void {
+    this.onAircraftPositionsUpdate = callback;
   }
 
   public getHotspotLevels(): Record<string, string> {

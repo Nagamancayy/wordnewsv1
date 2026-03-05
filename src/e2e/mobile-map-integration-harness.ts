@@ -129,6 +129,7 @@ const layers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 await initI18n();

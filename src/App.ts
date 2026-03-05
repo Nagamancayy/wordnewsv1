@@ -290,6 +290,7 @@ export class App {
 
     this.dataLoader = new DataLoaderManager(this.state, {
       renderCriticalBanner: (postures) => this.panelLayout.renderCriticalBanner(postures),
+      refreshOpenCountryBrief: () => this.countryIntel.refreshOpenCountryBrief(),
     });
 
     this.searchManager = new SearchManager(this.state, {

@@ -219,6 +219,7 @@ export const DEFAULT_MAP_LAYERS: MapLayers = {
   tradeRoutes: true,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 // Mobile defaults for finance variant
@@ -270,6 +271,7 @@ export const MOBILE_DEFAULT_MAP_LAYERS: MapLayers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 export const VARIANT_CONFIG: VariantConfig = {

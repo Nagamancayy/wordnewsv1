@@ -677,9 +677,21 @@ export class EventHandlerManager implements AppModule {
         return;
       }
 
+      if (layer === 'flights') {
+        const airlineIntel = this.ctx.panels['airline-intel'] as import('@/components').AirlineIntelPanel | undefined;
+        airlineIntel?.setLiveMode(enabled);
+      }
+
       if (enabled) {
         this.callbacks.loadDataForLayer(layer);
       }
+    });
+
+    // Forward live aircraft positions from map to AirlineIntelPanel + cache
+    this.ctx.map?.setOnAircraftPositionsUpdate((positions) => {
+      this.ctx.intelligenceCache.aircraftPositions = positions;
+      const airlineIntel = this.ctx.panels['airline-intel'] as import('@/components').AirlineIntelPanel | undefined;
+      airlineIntel?.updateLivePositions(positions);
     });
   }
 

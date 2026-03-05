@@ -54,6 +54,7 @@ const FULL_PANELS: Record<string, PanelConfig> = {
   'security-advisories': { name: 'Security Advisories', enabled: true, priority: 2 },
   'oref-sirens': { name: 'Israel Sirens', enabled: true, priority: 2 },
   'telegram-intel': { name: 'Telegram Intel', enabled: true, priority: 2 },
+  'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
 };
 
@@ -106,6 +107,7 @@ const FULL_MAP_LAYERS: MapLayers = {
   renewableInstallations: false,
   tradeRoutes: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 const FULL_MOBILE_MAP_LAYERS: MapLayers = {
@@ -157,6 +159,7 @@ const FULL_MOBILE_MAP_LAYERS: MapLayers = {
   renewableInstallations: false,
   tradeRoutes: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 // ============================================
@@ -198,6 +201,7 @@ const TECH_PANELS: Record<string, PanelConfig> = {
   stablecoins: { name: 'Stablecoins', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
+  'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
 };
 
 const TECH_MAP_LAYERS: MapLayers = {
@@ -249,6 +253,7 @@ const TECH_MAP_LAYERS: MapLayers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 const TECH_MOBILE_MAP_LAYERS: MapLayers = {
@@ -300,6 +305,7 @@ const TECH_MOBILE_MAP_LAYERS: MapLayers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 // ============================================
@@ -339,6 +345,7 @@ const FINANCE_PANELS: Record<string, PanelConfig> = {
   polymarket: { name: 'Predictions', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
+  'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
 };
 
 const FINANCE_MAP_LAYERS: MapLayers = {
@@ -390,6 +397,7 @@ const FINANCE_MAP_LAYERS: MapLayers = {
   tradeRoutes: true,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
@@ -441,6 +449,7 @@ const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 // ============================================
@@ -508,6 +517,7 @@ const HAPPY_MAP_LAYERS: MapLayers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
@@ -559,6 +569,7 @@ const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
   tradeRoutes: false,
   iranAttacks: false,
   dayNight: false,
+  ciiChoropleth: false,
 };
 
 // ============================================

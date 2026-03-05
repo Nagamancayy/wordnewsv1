@@ -41,6 +41,10 @@ scripts/data/gpsjam-latest.json
 scripts/data/mirta-raw.geojson
 scripts/data/osm-military-raw.json
 
+# Backups and Logs
+worldmonitor-main 2/
+tsc_errors.txt
+
 # Iran events seed script + data (sensitive, not for public repo)
 scripts/seed-iran-events.mjs
 scripts/data/iran-events-latest.json

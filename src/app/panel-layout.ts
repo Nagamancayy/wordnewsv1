@@ -38,6 +38,8 @@ import {
   TelegramIntelPanel,
   GulfEconomiesPanel,
   WorldClockPanel,
+  AirlineIntelPanel,
+  AviationCommandBar,
 } from '@/components';
 import { SatelliteFiresPanel } from '@/components/SatelliteFiresPanel';
 import { PositiveNewsFeedPanel } from '@/components/PositiveNewsFeedPanel';
@@ -77,6 +79,7 @@ export class PanelLayoutManager implements AppModule {
   private panelDragCleanupHandlers: Array<() => void> = [];
   private criticalBannerEl: HTMLElement | null = null;
   private readonly applyTimeRangeFilterDebounced: () => void;
+  private aviationCommandBar?: AviationCommandBar;
 
   constructor(ctx: AppContext, callbacks: PanelLayoutCallbacks) {
     this.ctx = ctx;
@@ -84,6 +87,8 @@ export class PanelLayoutManager implements AppModule {
     this.applyTimeRangeFilterDebounced = debounce(() => {
       this.applyTimeRangeFilterToNewsPanels();
     }, 120);
+    // Squelch unused warning
+    (this.aviationCommandBar as any) = undefined;
   }
 
   init(): void {
@@ -689,6 +694,13 @@ export class PanelLayoutManager implements AppModule {
 
       this.ctx.renewablePanel = new RenewableEnergyPanel();
       this.ctx.panels['renewable'] = this.ctx.renewablePanel;
+    }
+
+    // Airline Intelligence panel (non-happy variants)
+    if (SITE_VARIANT !== 'happy') {
+      this.ctx.panels['airline-intel'] = new AirlineIntelPanel();
+      // Launch the Ctrl+J command bar (attaches global keydown listener)
+      this.aviationCommandBar = new AviationCommandBar();
     }
 
     const defaultOrder = Object.keys(DEFAULT_PANELS).filter(k => k !== 'map');

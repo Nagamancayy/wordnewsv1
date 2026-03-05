@@ -877,6 +877,7 @@
         "strategicWaterways": "Strategic Waterways",
         "economicCenters": "Economic Centers",
         "criticalMinerals": "Critical Minerals",
+        "minerals": "Critical Minerals",
         "stockExchanges": "Stock Exchanges",
         "financialCenters": "Financial Centers",
         "centralBanks": "Central Banks",
@@ -884,8 +885,9 @@
         "gulfInvestments": "GCC Investments",
         "tradeRoutes": "Trade Routes",
         "iranAttacks": "Iran Attacks",
-        "gpsJamming": "GPS JAMMING",
-        "dayNight": "Day/Night"
+        "gpsJamming": "GPS/GNSS Interference",
+        "ciiChoropleth": "Country Instability Index",
+        "dayNight": "Day/Night Cycle"
       },
       "tooltip": {
         "earthquake": "Earthquake",

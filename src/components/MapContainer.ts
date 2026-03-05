@@ -26,7 +26,7 @@ import type {
   CyberThreat,
   CableHealthRecord,
 } from '@/types';
-import type { AirportDelayAlert } from '@/services/aviation';
+import type { AirportDelayAlert, PositionSample } from '@/services/aviation';
 import type { DisplacementFlow } from '@/services/displacement';
 import type { Earthquake } from '@/services/earthquakes';
 import type { ClimateAnomaly } from '@/services/climate';
@@ -241,6 +241,12 @@ export class MapContainer {
     }
   }
 
+  public setAircraftPositions(positions: PositionSample[]): void {
+    if (this.useDeckGL) {
+      this.deckGLMap?.setAircraftPositions(positions);
+    }
+  }
+
   public setAisData(disruptions: AisDisruptionEvent[], density: AisDensityZone[]): void {
     if (this.useDeckGL) {
       this.deckGLMap?.setAisData(disruptions, density);
@@ -351,6 +357,13 @@ export class MapContainer {
     } else {
       this.svgMap?.setCyberThreats(threats);
     }
+  }
+
+  public setCIIScores(scores: Array<{ code: string; score: number; level: string }>): void {
+    if (this.useDeckGL) {
+      this.deckGLMap?.setCIIScores(scores);
+    }
+    // SVG map does not support CII Scores layer
   }
 
   public setIranEvents(events: import('@/services/conflict').IranEvent[]): void {
@@ -467,6 +480,12 @@ export class MapContainer {
       });
     } else {
       this.svgMap?.onStateChanged(callback);
+    }
+  }
+
+  public setOnAircraftPositionsUpdate(callback: (positions: PositionSample[]) => void): void {
+    if (this.useDeckGL) {
+      this.deckGLMap?.setOnAircraftPositionsUpdate(callback);
     }
   }
 

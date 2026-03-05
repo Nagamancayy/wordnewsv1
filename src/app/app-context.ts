@@ -8,7 +8,7 @@ import type { MarketData, ClusteredEvent } from '@/types';
 import type { PredictionMarket } from '@/services/prediction';
 import type { TimeRange } from '@/components';
 import type { Earthquake } from '@/services/earthquakes';
-import type { CountryBriefPage } from '@/components/CountryBriefPage';
+import type { CountryBriefPanel } from '@/components/CountryBriefPanel';
 import type { CountryTimeline } from '@/components/CountryTimeline';
 import type { PlaybackControl } from '@/components';
 import type { ExportPanel } from '@/utils';
@@ -52,6 +52,7 @@ export interface CountryBriefSignals {
 
 export interface IntelligenceCache {
   flightDelays?: AirportDelayAlert[];
+  aircraftPositions?: any[];
   outages?: InternetOutage[];
   protests?: { events: SocialUnrestEvent[]; sources: { acled: number; gdelt: number } };
   military?: { flights: MilitaryFlight[]; flightClusters: MilitaryFlightCluster[]; vessels: MilitaryVessel[]; vesselClusters: MilitaryVesselCluster[] };
@@ -104,7 +105,7 @@ export interface AppContext {
   unifiedSettings: UnifiedSettings | null;
   mobileWarningModal: MobileWarningModal | null;
   pizzintIndicator: PizzIntIndicator | null;
-  countryBriefPage: CountryBriefPage | null;
+  countryBriefPage: CountryBriefPanel | null;
   countryTimeline: CountryTimeline | null;
 
   // Happy variant state
