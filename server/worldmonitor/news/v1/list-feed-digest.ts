@@ -48,7 +48,41 @@ async function fetchAndParseRss(
 ): Promise<ParsedItem[]> {
   const cacheKey = `rss:feed:v1:${feed.url}`;
 
+  // Bypass Redis if unconfigured
+  const hasRedis = !!process.env.UPSTASH_REDIS_REST_URL;
+
   try {
+    if (!hasRedis) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), FEED_TIMEOUT_MS);
+      const onAbort = () => controller.abort();
+      signal.addEventListener('abort', onAbort, { once: true });
+
+      try {
+        const resp = await fetch(feed.url, {
+          headers: {
+            'User-Agent': CHROME_UA,
+            'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+            'Accept-Language': 'en-US,en;q=0.9',
+          },
+          signal: controller.signal,
+        });
+        if (!resp.ok) {
+          console.warn(`[News] HTTP ${resp.status} for ${feed.name} (${feed.url})`);
+          return [];
+        }
+
+        const text = await resp.text();
+        return parseRssXml(text, feed, variant) ?? [];
+      } catch (e) {
+        console.error(`[News] Exception fetching ${feed.name}:`, e);
+        return [];
+      } finally {
+        clearTimeout(timeout);
+        signal.removeEventListener('abort', onAbort);
+      }
+    }
+
     const cached = await cachedFetchJson<ParsedItem[]>(cacheKey, 600, async () => {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), FEED_TIMEOUT_MS);
@@ -76,7 +110,8 @@ async function fetchAndParseRss(
     });
 
     return cached ?? [];
-  } catch {
+  } catch (e) {
+    console.error(`[News] Global catch for ${feed.name}:`, e);
     return [];
   }
 }
@@ -187,9 +222,20 @@ export async function listFeedDigest(
   const lang = req.lang || 'en';
 
   const digestCacheKey = `news:digest:v1:${variant}:${lang}`;
-
   const fallbackKey = `${variant}:${lang}`;
+
+  // If Redis is not configured, bypass it entirely to prevent hanging
+  const hasRedis = !!process.env.UPSTASH_REDIS_REST_URL;
+
   try {
+    if (!hasRedis) {
+      console.warn('[News] Redis not configured, building digest directly');
+      const data = await buildDigest(variant, lang);
+      if (fallbackDigestCache.size > 50) fallbackDigestCache.clear();
+      fallbackDigestCache.set(fallbackKey, { data, ts: Date.now() });
+      return data;
+    }
+
     const cached = await cachedFetchJson<ListFeedDigestResponse>(digestCacheKey, 900, async () => {
       return buildDigest(variant, lang);
     });
@@ -198,7 +244,8 @@ export async function listFeedDigest(
       fallbackDigestCache.set(fallbackKey, { data: cached, ts: Date.now() });
     }
     return cached ?? fallbackDigestCache.get(fallbackKey)?.data ?? { categories: {}, feedStatuses: {}, generatedAt: new Date().toISOString() };
-  } catch {
+  } catch (e) {
+    console.error('[News] Error building digest:', e);
     return fallbackDigestCache.get(fallbackKey)?.data ?? { categories: {}, feedStatuses: {}, generatedAt: new Date().toISOString() };
   }
 }
