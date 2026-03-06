@@ -119,8 +119,7 @@ export class PanelLayoutManager implements AppModule {
       <div class="header">
         <div class="header-left">
           <div class="variant-switcher">${(() => {
-            const local = this.ctx.isDesktopApp || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
-            const vHref = (v: string, prod: string) => local || SITE_VARIANT === v ? '#' : prod;
+          const vHref = (_v: string, _prod: string) => '#';
             const vTarget = (_v: string) => '';
             return `
             <a href="${vHref('full', 'https://worldmonitor.app')}"
@@ -149,15 +148,15 @@ export class PanelLayoutManager implements AppModule {
               <span class="variant-icon">📈</span>
               <span class="variant-label">${t('header.finance')}</span>
             </a>
-            ${SITE_VARIANT === 'happy' ? `<span class="variant-divider"></span>
-            <a href="${vHref('happy', 'https://happy.worldmonitor.app')}"
-               class="variant-option active"
+            <span class="variant-divider"></span>
+            <a href="${vHref('happy', '#')}"
+               class="variant-option ${SITE_VARIANT === 'happy' ? 'active' : ''}"
                data-variant="happy"
                ${vTarget('happy')}
-               title="Good News ${t('common.currentVariant')}">
+               title="Good News${SITE_VARIANT === 'happy' ? ` ${t('common.currentVariant')}` : ''}">
               <span class="variant-icon">☀️</span>
               <span class="variant-label">Good News</span>
-            </a>` : ''}`;
+            </a>`;
           })()}</div>
           <span class="logo">MONITOR</span><span class="version">v${__APP_VERSION__}</span>${BETA_MODE ? '<span class="beta-badge">BETA</span>' : ''}
           <a href="https://github.com/Nagamancayy/wordnewsv1" target="_blank" rel="noopener" class="github-link" title="${t('header.viewOnGitHub')}">
